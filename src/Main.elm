@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, form, h1, h2, input, label, p, text)
+import Html exposing (Html, button, div, form, h1, h2, input, label, p, small, text)
 import Html.Attributes exposing (class, for, name, placeholder, type_, value)
 import Html.Events exposing (onClick, onInput)
 
@@ -16,7 +16,6 @@ main =
 
 
 -- model
--- Control show / hide password
 
 
 type alias SignUpForm =
@@ -55,11 +54,7 @@ type Msg
     | FormTogglePasswordVisiblity
     | FormName String
     | FormPassword String
-
-
-
--- | FormPassword String
--- | FormPasswordAgain String
+    | FormPasswordAgain String
 
 
 update : Msg -> Model -> Model
@@ -103,6 +98,25 @@ update msg model =
                     { oldForm | password = newPassword }
             in
             { model | form = newForm }
+
+        FormPasswordAgain newPasswordAgain ->
+            let
+                oldForm =
+                    .form model
+
+                newForm =
+                    { oldForm | passwordAgain = newPasswordAgain }
+            in
+            { model | form = newForm }
+
+
+validatePasswordAgain : SignUpForm -> Maybe String
+validatePasswordAgain form =
+    if form.password /= form.passwordAgain then
+        Just "Passwords must match"
+
+    else
+        Nothing
 
 
 
@@ -166,5 +180,29 @@ view model =
                         ]
                     ]
                 ]
+            ]
+        , div [ class "form-group" ]
+            [ label [ for "password-again" ] [ text "Re-enter your password" ]
+            , input
+                [ class
+                    ("form-control "
+                        ++ (if validatePasswordAgain model.form == Nothing then
+                                "is-valid"
+
+                            else
+                                "is-invalid"
+                           )
+                    )
+                , name "password-again"
+                , type_ <|
+                    if model.form.showPassword == True then
+                        "text"
+
+                    else
+                        "password"
+                , onInput FormPasswordAgain
+                ]
+                []
+            , div [ class "invalid-feedback" ] [ text <| Maybe.withDefault "" <| validatePasswordAgain model.form ]
             ]
         ]
