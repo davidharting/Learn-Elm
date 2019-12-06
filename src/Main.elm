@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, h1, p, text)
+import Html exposing (Html, button, div, h1, h2, p, text)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 
@@ -55,6 +55,7 @@ view model =
     div [ class "container" ]
         [ h1 []
             [ text "David Learns Elm 🌳" ]
+        , h2 [] [ text "Counter" ]
         , div
             [ class "row align-items-center" ]
             [ button [ class "btn btn-danger col", onClick Decrement ]
