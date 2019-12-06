@@ -1,9 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, h1, h2, p, text)
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, h1, h2, input, p, text)
+import Html.Attributes exposing (class, placeholder, value)
+import Html.Events exposing (onClick, onInput)
 
 
 
@@ -19,12 +19,12 @@ main =
 
 
 type alias Model =
-    { count : Int }
+    { content : String, count : Int }
 
 
 init : Model
 init =
-    { count = 0 }
+    { content = "", count = 0 }
 
 
 
@@ -34,6 +34,7 @@ init =
 type Msg
     = Increment
     | Decrement
+    | Change String
 
 
 update : Msg -> Model -> Model
@@ -44,6 +45,9 @@ update msg model =
 
         Decrement ->
             { model | count = .count model - 1 }
+
+        Change newContent ->
+            { model | content = newContent }
 
 
 
@@ -66,5 +70,10 @@ view model =
             , button
                 [ class "btn btn-success col", onClick Increment ]
                 [ text "+" ]
+            ]
+        , h2 [] [ text "Reverse text field" ]
+        , div []
+            [ input [ class "form-control", placeholder "Text to reverse", value <| .content model, onInput Change ] []
+            , p [] [ text <| String.reverse <| .content model ]
             ]
         ]
